@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ab_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ab_testing
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow:
+    image: apache/airflow:2.9.0
+    container_name: ab_airflow
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@postgres/ab_testing
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin 
+      _PIP_ADDITIONAL_REQUIREMENTS: 'psycopg2-binary'
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./data_generator:/data
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "airflow db init &&
+      airflow users create --username admin --password admin --firstname admin --lastname admin --role Admin --email admin@example.com &&
+      (airflow scheduler &) &&
+      airflow webserver"
+volumes:
+  postgres_data:

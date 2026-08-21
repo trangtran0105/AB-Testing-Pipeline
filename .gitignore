@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+airflow/logs/
+airflow/plugins/
+data_generator/raw_events.json
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+.DS_Store
+Thumbs.db
