@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: ab_metabase
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
   postgres:
     image: postgres:15
     container_name: ab_postgres
