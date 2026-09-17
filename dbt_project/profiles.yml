@@ -1,0 +1,12 @@
+ab_testing_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'localhost') }}"
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: ab_testing
+      schema: public
+      threads: 4

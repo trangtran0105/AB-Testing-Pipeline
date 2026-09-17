@@ -24,11 +24,16 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       _AIRFLOW_WWW_USER_USERNAME: admin
       _AIRFLOW_WWW_USER_PASSWORD: admin 
-      _PIP_ADDITIONAL_REQUIREMENTS: 'psycopg2-binary'
+      _PIP_ADDITIONAL_REQUIREMENTS: 'psycopg2-binary dbt-postgres scipy numpy' 
+      DBT_PROFILES_DIR: /opt/airflow/dbt_project 
+      DBT_HOST: postgres
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
-      - ./data_generator:/data
+      - ./data_generator:/data 
+      - ./dbt_project:/opt/airflow/dbt_project
+      - ./quality_checks:/opt/airflow/quality_checks
+      - ./stats_engine:/opt/airflow/stats_engine
     ports:
       - "8080:8080"
     command: >
